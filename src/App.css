@@ -1,38 +1,91 @@
-.App {
-  text-align: center;
+/* 🌈 Page Background */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(120deg, #eef2ff, #f8fafc);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* 📦 Main Container */
+.app-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* 🔍 Search Bar */
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+/* ✨ Focus Effect */
+input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+}
+
+/* 📊 Table Container */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 🧾 Table Header */
+th {
+  background: #6366f1;
   color: white;
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
-.App-link {
-  color: #61dafb;
+/* 📄 Table Data */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #f1f1f1;
+  color: #333;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 🎯 Row Hover */
+tr:hover {
+  background: #f1f5ff;
+  transition: 0.2s;
+}
+
+/* 🔢 Zebra Stripes */
+tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* 🧑 Name Column Highlight */
+td:first-child {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* 📧 Email Styling */
+td:nth-child(2) {
+  color: #4f46e5;
+}
+
+/* 📱 Phone */
+td:nth-child(3) {
+  color: #374151;
+}
+
+/* 🏢 Company */
+td:nth-child(4) {
+  font-weight: 500;
+  color: #059669;
 }
