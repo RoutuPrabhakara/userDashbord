@@ -10,8 +10,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Stable callback for fetching users
-  const fetchAndFilter = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getUsers();
@@ -28,12 +27,11 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [search]); // include search dependency
+  }, [search]);
 
-  // Run the fetch when component mounts or search changes
   useEffect(() => {
-    fetchAndFilter();
-  }, [fetchAndFilter]); // ESLint is happy now
+    fetchUsers();
+  }, [fetchUsers]);
 
   const filteredUsers = useMemo(() => {
     return users.filter(

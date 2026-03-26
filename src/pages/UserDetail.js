@@ -19,11 +19,11 @@ const UserDetail = () => {
     } finally {
       setLoading(false);
     }
-  }, [id]); // id is dependency
+  }, [id]);
 
   useEffect(() => {
     fetchUser();
-  }, [fetchUser]); // ESLint happy
+  }, [fetchUser]);
 
   if (loading) return <Loader />;
   if (!user) return <div className="center">User not found</div>;
