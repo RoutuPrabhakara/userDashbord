@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { getUsers } from "../services/api";
 import UserTable from "../components/UserTable";
 import SearchBar from "../components/SearchBar";
@@ -11,22 +11,20 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    handleFilter();
-  }, [search, users]);
-
-  const fetchUsers = async () => {
+  // ✅ fetchUsers wrapped in useCallback
+  const fetchUsers = useCallback(async () => {
     const data = await getUsers();
     setUsers(data);
     setFiltered(data);
     setLoading(false);
-  };
+  }, []);
 
-  const handleFilter = () => {
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  // ✅ handleFilter wrapped in useCallback
+  const handleFilter = useCallback(() => {
     const filteredData = users.filter(
       (user) =>
         user.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -35,7 +33,6 @@ const Dashboard = () => {
 
     setFiltered(filteredData);
 
-    // 🎯 If exact match → show card
     const exact = users.find(
       (user) =>
         user.name.toLowerCase() === search.toLowerCase() ||
@@ -43,7 +40,11 @@ const Dashboard = () => {
     );
 
     setSelectedUser(exact || null);
-  };
+  }, [search, users]);
+
+  useEffect(() => {
+    handleFilter();
+  }, [handleFilter]);
 
   if (loading) return <Loader />;
 
@@ -51,7 +52,6 @@ const Dashboard = () => {
     <div>
       <SearchBar search={search} setSearch={setSearch} />
 
-      {/* 🎯 Show Card if matched */}
       {selectedUser ? (
         <div className="detail-page">
           <div className="card">
@@ -65,16 +65,16 @@ const Dashboard = () => {
             <div className="section">
               <h3>Address</h3>
               <p>
-                {selectedUser.address.street},{" "}
-                {selectedUser.address.city}
+                {selectedUser.address?.street},{" "}
+                {selectedUser.address?.city}
               </p>
             </div>
 
             <div className="section">
               <h3>Company</h3>
-              <p>{selectedUser.company.name}</p>
+              <p>{selectedUser.company?.name}</p>
               <p className="tagline">
-                {selectedUser.company.catchPhrase}
+                {selectedUser.company?.catchPhrase}
               </p>
             </div>
           </div>

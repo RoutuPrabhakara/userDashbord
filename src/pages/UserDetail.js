@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { getUsers } from "../services/api";
 
@@ -6,15 +6,16 @@ const UserDetail = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  const fetchUser = async () => {
+  // ✅ wrap function in useCallback
+  const fetchUser = useCallback(async () => {
     const data = await getUsers();
     const found = data.find((u) => u.id === parseInt(id));
     setUser(found);
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   if (!user) return <div className="center">Loading...</div>;
 
@@ -30,13 +31,15 @@ const UserDetail = () => {
 
         <div className="section">
           <h3>Address</h3>
-          <p>{user.address.street}, {user.address.city}</p>
+          <p>
+            {user.address?.street}, {user.address?.city}
+          </p>
         </div>
 
         <div className="section">
           <h3>Company</h3>
-          <p>{user.company.name}</p>
-          <p className="tagline">{user.company.catchPhrase}</p>
+          <p>{user.company?.name}</p>
+          <p className="tagline">{user.company?.catchPhrase}</p>
         </div>
       </div>
     </div>
