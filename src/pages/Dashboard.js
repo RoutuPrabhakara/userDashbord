@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // ✅ fetchUsers wrapped in useCallback
+  // ✅ Fetch users
   const fetchUsers = useCallback(async () => {
     const data = await getUsers();
     setUsers(data);
@@ -23,8 +23,14 @@ const Dashboard = () => {
     fetchUsers();
   }, [fetchUsers]);
 
-  // ✅ handleFilter wrapped in useCallback
+  // ✅ Filter users
   const handleFilter = useCallback(() => {
+    if (!search) {
+      setFiltered(users);
+      setSelectedUser(null);
+      return;
+    }
+
     const filteredData = users.filter(
       (user) =>
         user.name.toLowerCase().includes(search.toLowerCase()) ||

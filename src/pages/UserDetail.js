@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getUsers } from "../services/api";
 
@@ -6,16 +6,15 @@ const UserDetail = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
 
-  // ✅ wrap function in useCallback
-  const fetchUser = useCallback(async () => {
-    const data = await getUsers();
-    const found = data.find((u) => u.id === parseInt(id));
-    setUser(found);
-  }, [id]);
-
   useEffect(() => {
+    const fetchUser = async () => {
+      const data = await getUsers();
+      const found = data.find((u) => u.id === parseInt(id));
+      setUser(found);
+    };
+
     fetchUser();
-  }, [fetchUser]);
+  }, [id]);
 
   if (!user) return <div className="center">Loading...</div>;
 
