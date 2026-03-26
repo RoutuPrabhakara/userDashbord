@@ -22,7 +22,7 @@ const UserDetail = () => {
     };
 
     fetchUser();
-  }, [id]);
+  }, [id]); // ESLint happy, dependency included
 
   if (loading) return <Loader />;
   if (!user) return <div className="center">User not found</div>;

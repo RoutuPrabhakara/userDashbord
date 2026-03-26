@@ -10,12 +10,20 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Fetch users once
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchAndFilter = async () => {
       try {
         const data = await getUsers();
         setUsers(data);
+
+        // Filter right after fetching
+        const exact = data.find(
+          (user) =>
+            user.name.toLowerCase() === search.toLowerCase() ||
+            user.email.toLowerCase() === search.toLowerCase()
+        );
+
+        setSelectedUser(exact || null);
       } catch (err) {
         console.error(err);
       } finally {
@@ -23,26 +31,15 @@ const Dashboard = () => {
       }
     };
 
-    fetchUsers();
-  }, []);
+    fetchAndFilter();
+  }, [search]); // now ESLint won't complain
 
-  // Memoized filtered users based on search
   const filteredUsers = useMemo(() => {
-    const filtered = users.filter(
+    return users.filter(
       (user) =>
         user.name.toLowerCase().includes(search.toLowerCase()) ||
         user.email.toLowerCase().includes(search.toLowerCase())
     );
-
-    const exact = users.find(
-      (user) =>
-        user.name.toLowerCase() === search.toLowerCase() ||
-        user.email.toLowerCase() === search.toLowerCase()
-    );
-
-    setSelectedUser(exact || null);
-
-    return filtered;
   }, [search, users]);
 
   if (loading) return <Loader />;
@@ -50,7 +47,6 @@ const Dashboard = () => {
   return (
     <div>
       <SearchBar search={search} setSearch={setSearch} />
-
       {selectedUser ? (
         <div className="detail-page">
           <div className="card">
