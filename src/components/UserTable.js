@@ -1,7 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const UserTable = ({ users, sortField, setSortField, sortOrder, setSortOrder }) => {
+const UserTable = ({
+  users,
+  sortField,
+  setSortField,
+  sortOrder,
+  setSortOrder,
+}) => {
   const navigate = useNavigate();
 
   const handleSort = (field) => {
@@ -17,12 +23,23 @@ const UserTable = ({ users, sortField, setSortField, sortOrder, setSortOrder }) 
     <table className="w-full border">
       <thead>
         <tr className="bg-gray-200">
-          <th onClick={() => handleSort("name")} className="cursor-pointer">Name</th>
+          <th
+            onClick={() => handleSort("name")}
+            className="cursor-pointer"
+          >
+            Name
+          </th>
           <th>Email</th>
           <th>Phone</th>
-          <th onClick={() => handleSort("company")} className="cursor-pointer">Company</th>
+          <th
+            onClick={() => handleSort("company")}
+            className="cursor-pointer"
+          >
+            Company
+          </th>
         </tr>
       </thead>
+
       <tbody>
         {users.map((user) => (
           <tr
@@ -33,7 +50,9 @@ const UserTable = ({ users, sortField, setSortField, sortOrder, setSortOrder }) 
             <td>{user.name}</td>
             <td>{user.email}</td>
             <td>{user.phone}</td>
-            <td>{user.company.name}</td>
+
+            {/* 🔥 IMPORTANT FIX (safe access) */}
+            <td>{user.company?.name}</td>
           </tr>
         ))}
       </tbody>
