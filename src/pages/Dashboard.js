@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { getUsers } from "../services/api";
 import UserTable from "../components/UserTable";
 import SearchBar from "../components/SearchBar";
@@ -10,29 +10,30 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  // Stable callback for fetching users
+  const fetchAndFilter = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getUsers();
+      setUsers(data);
+
+      const exact = data.find(
+        (user) =>
+          user.name.toLowerCase() === search.toLowerCase() ||
+          user.email.toLowerCase() === search.toLowerCase()
+      );
+      setSelectedUser(exact || null);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [search]); // include search dependency
+
+  // Run the fetch when component mounts or search changes
   useEffect(() => {
-    const fetchAndFilter = async () => {
-      try {
-        const data = await getUsers();
-        setUsers(data);
-
-        // Filter right after fetching
-        const exact = data.find(
-          (user) =>
-            user.name.toLowerCase() === search.toLowerCase() ||
-            user.email.toLowerCase() === search.toLowerCase()
-        );
-
-        setSelectedUser(exact || null);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAndFilter();
-  }, [search]); // now ESLint won't complain
+  }, [fetchAndFilter]); // ESLint is happy now
 
   const filteredUsers = useMemo(() => {
     return users.filter(

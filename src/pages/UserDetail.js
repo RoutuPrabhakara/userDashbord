@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { getUsers } from "../services/api";
 import Loader from "../components/Loader";
@@ -8,21 +8,22 @@ const UserDetail = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await getUsers();
-        const found = data.find((u) => u.id === parseInt(id, 10));
-        setUser(found);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchUser = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getUsers();
+      const found = data.find((u) => u.id === parseInt(id, 10));
+      setUser(found);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]); // id is dependency
 
+  useEffect(() => {
     fetchUser();
-  }, [id]); // ESLint happy, dependency included
+  }, [fetchUser]); // ESLint happy
 
   if (loading) return <Loader />;
   if (!user) return <div className="center">User not found</div>;
